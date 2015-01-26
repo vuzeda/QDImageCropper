@@ -11,6 +11,9 @@
 
 @interface ViewController () <UIImagePickerControllerDelegate, UINavigationControllerDelegate>
 
+@property (weak, nonatomic) IBOutlet UIImageView *originalImageView;
+@property (weak, nonatomic) IBOutlet UIImageView *croppedImageView;
+
 @end
 
 @implementation ViewController
@@ -50,8 +53,8 @@
         QDImageCropper *cropper = [[QDImageCropper alloc] initWithImage:img
                                                         resultImageSize:CGSizeMake(100.0, 100.0)
                                                              completion:^(UIImage *image, CGRect rect, UIImage *croppedImage) {
-                                                                 UIImageView *iv = [[UIImageView alloc] initWithImage:croppedImage];
-                                                                 [self.view addSubview:iv];
+                                                                 self.originalImageView.image = image;
+                                                                 self.croppedImageView.image = croppedImage;
                                                              }];
         [self presentViewController:cropper animated:YES completion:nil];
     }];
