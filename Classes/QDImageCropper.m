@@ -9,7 +9,7 @@
 #import "QDImageCropper.h"
 #import "QDImageCropperView.h"
 
-@interface QDImageCropper () {
+@interface QDImageCropper () <QDImageCropperViewDelegate> {
     void(^_completion)(UIImage *image, CGRect rect, UIImage *croppedImage);
 }
 
@@ -35,6 +35,7 @@
         _imageCropperView = [[QDImageCropperView alloc] initWithFrame:CGRectMake(0.0, 0.0, self.view.frame.size.width, self.view.frame.size.height)];
         _imageCropperView.image = image;
         _imageCropperView.imageSize = imageSize;
+        _imageCropperView.delegate = self;
 
         _completion = completion;
 
@@ -108,11 +109,7 @@
 
 - (void)crop
 {
-    [_imageCropperView crop:^(UIImage *image, CGRect rect, UIImage *croppedImage) {
-        _completion(image, rect, croppedImage);
-
-        [self back];
-    }];
+    [_imageCropperView crop];
 }
 
 - (void)back
@@ -124,6 +121,20 @@
 {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
+}
+
+#pragma mark QDImageCropperViewDelegate
+
+-(void)imageCropperView:(QDImageCropperView *)imageCropperView didScaleImage:(UIImage *)image scaledRect:(CGRect)scaledRect
+{
+    // NSLog(@"QDImageCropperView: did scale image to [(%f, %f), (%f, %f)]", scaledRect.origin.x, scaledRect.origin.y, scaledRect.size.width, scaledRect.size.height);
+}
+
+-(void)imageCropperView:(QDImageCropperView *)imageCropperView didCropImage:(UIImage *)image croppedRect:(CGRect)croppedRect croppedImage:(UIImage *)croppedImage
+{
+    _completion(image, croppedRect, croppedImage);
+
+    [self back];
 }
 
 @end

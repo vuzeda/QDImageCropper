@@ -8,6 +8,10 @@
 
 #import <UIKit/UIKit.h>
 
+@protocol QDImageCropperViewDelegate;
+
+
+
 @interface QDImageCropperView : UIView
 
 @property (strong, nonatomic) UIImage *image;
@@ -16,6 +20,20 @@
 @property (nonatomic, assign) CGFloat frameXOffset;
 @property (nonatomic, strong) UIColor *overlayColor;
 
-- (void)crop:(void(^)(UIImage *image, CGRect rect, UIImage *croppedImage))completion;
+@property (nonatomic, strong) id<QDImageCropperViewDelegate> delegate;
+
+- (void)crop;
+
+@end
+
+
+
+@protocol QDImageCropperViewDelegate <NSObject>
+
+@optional
+- (void)imageCropperView:(QDImageCropperView *)imageCropperView didScaleImage:(UIImage *)image scaledRect:(CGRect)scaledRect;
+
+@required
+- (void)imageCropperView:(QDImageCropperView *)imageCropperView didCropImage:(UIImage *)image croppedRect:(CGRect)croppedRect croppedImage:(UIImage *)croppedImage;
 
 @end

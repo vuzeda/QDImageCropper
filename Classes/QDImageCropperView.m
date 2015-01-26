@@ -120,6 +120,10 @@
 
 - (void)setupContent
 {
+    if ((self.delegate != nil) && [self.delegate respondsToSelector:@selector(imageCropperView:didScaleImage:scaledRect:)]) {
+        [self.delegate imageCropperView:self didScaleImage:_image scaledRect:[self croppingRect]];
+    }
+
     [_scrollView setContentSize:CGSizeMake(_imageContainer.frame.size.width - sightFrame.origin.x * 2 * (_scrollView.zoomScale - 1.0), _imageContainer.frame.size.height - (sightFrame.origin.y * 2) * (_scrollView.zoomScale - 1.0))];
 
     CGRect frame = _imageContainer.frame;
@@ -130,7 +134,7 @@
     _imageContainer.frame = frame;
 }
 
-- (void)crop:(void(^)(UIImage *image, CGRect rect, UIImage *croppedImage))completion {
+- (void)crop {
     CGRect result = [self croppingRect];
 
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(result.size.width, result.size.height), NO, 0.0);
@@ -138,7 +142,9 @@
     UIImage *croppedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 
-    completion(_image, result, croppedImage);
+    if (self.delegate != nil) {
+        [self.delegate imageCropperView:self didCropImage:_image croppedRect:result croppedImage:croppedImage];
+    }
 }
 
 - (CGRect)croppingRect
