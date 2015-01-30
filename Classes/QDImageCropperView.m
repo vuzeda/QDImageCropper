@@ -134,13 +134,13 @@
     _imageContainer.frame = frame;
 }
 
-- (void)crop {
+- (void)crop
+{
     CGRect result = [self croppingRect];
 
-    UIGraphicsBeginImageContextWithOptions(CGSizeMake(result.size.width, result.size.height), NO, 0.0);
-    [_image drawAtPoint:CGPointMake(-result.origin.x, -result.origin.y) blendMode:kCGBlendModeCopy alpha:1.0];
-    UIImage *croppedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    CGImageRef croppedImageRef = CGImageCreateWithImageInRect(_image.CGImage, result);
+    UIImage *croppedImage = [UIImage imageWithCGImage:croppedImageRef];
+    CGImageRelease(croppedImageRef);
 
     if (self.delegate != nil) {
         [self.delegate imageCropperView:self didCropImage:_image croppedRect:result croppedImage:croppedImage];
