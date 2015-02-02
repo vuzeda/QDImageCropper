@@ -138,9 +138,10 @@
 {
     CGRect result = [self croppingRect];
 
-    CGImageRef croppedImageRef = CGImageCreateWithImageInRect(_image.CGImage, result);
-    UIImage *croppedImage = [UIImage imageWithCGImage:croppedImageRef];
-    CGImageRelease(croppedImageRef);
+    UIGraphicsBeginImageContext(result.size);
+    [_image drawInRect:CGRectMake(-result.origin.x, -result.origin.y, _image.size.width, _image.size.height)];
+    UIImage *croppedImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
 
     if (self.delegate != nil) {
         [self.delegate imageCropperView:self didCropImage:_image croppedRect:result croppedImage:croppedImage];
