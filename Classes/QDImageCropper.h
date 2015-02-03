@@ -11,6 +11,7 @@
 @interface QDImageCropper : UINavigationController
 
 @property (nonatomic, assign) CGFloat frameXOffset;
+@property (nonatomic, assign) CGFloat frameYOffset;
 @property (nonatomic, strong) UIColor *overlayColor;
 
 - (instancetype)initWithImage:(UIImage*)image resultImageSize:(CGSize)imageSize completion:(void(^)(UIImage *image, CGRect rect, UIImage *croppedImage))completion;

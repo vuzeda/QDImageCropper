@@ -18,6 +18,8 @@
 @property (assign, nonatomic) CGSize imageSize;
 
 @property (nonatomic, assign) CGFloat frameXOffset;
+@property (nonatomic, assign) CGFloat frameYOffset;
+
 @property (nonatomic, strong) UIColor *overlayColor;
 
 @property (nonatomic, strong) id<QDImageCropperViewDelegate> delegate;

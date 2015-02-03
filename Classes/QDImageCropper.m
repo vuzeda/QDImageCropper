@@ -23,6 +23,7 @@
 @implementation QDImageCropper
 
 @dynamic frameXOffset;
+@dynamic frameYOffset;
 @dynamic overlayColor;
 
 - (instancetype)initWithImage:(UIImage *)image resultImageSize:(CGSize)imageSize completion:(void (^)(UIImage *, CGRect, UIImage *))completion{
@@ -57,6 +58,16 @@
 -(void)setFrameXOffset:(CGFloat)frameXOffset
 {
     _imageCropperView.frameXOffset = frameXOffset;
+}
+
+-(CGFloat)frameYOffset
+{
+    return _imageCropperView.frameYOffset;
+}
+
+-(void)setFrameYOffset:(CGFloat)frameYOffset
+{
+    _imageCropperView.frameYOffset = frameYOffset;
 }
 
 -(UIColor *)overlayColor

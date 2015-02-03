@@ -51,11 +51,13 @@
         UIImage *img = [info objectForKey:UIImagePickerControllerOriginalImage];
         
         QDImageCropper *cropper = [[QDImageCropper alloc] initWithImage:img
-                                                        resultImageSize:CGSizeMake(100.0, 100.0)
+                                                        resultImageSize:CGSizeMake(180.0, 100.0)
                                                              completion:^(UIImage *image, CGRect rect, UIImage *croppedImage) {
                                                                  self.originalImageView.image = image;
                                                                  self.croppedImageView.image = croppedImage;
                                                              }];
+        cropper.frameXOffset = 20;
+        cropper.frameYOffset = 20;
         [self presentViewController:cropper animated:YES completion:nil];
     }];
 }

@@ -14,8 +14,6 @@
     CGRect sightFrame;
 }
 
-@property (nonatomic, assign) CGFloat frameYOffset;
-
 @property (strong, nonatomic) UIImageView *imageView;
 @property (assign, nonatomic) CGFloat scale;
 
@@ -48,6 +46,7 @@
 -(void)postInit
 {
     _frameXOffset = 20.0;
+    _frameYOffset = 20.0;
     _overlayColor = [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:0.8];
 }
 
@@ -86,11 +85,9 @@
     [_overlayView setColor:_overlayColor];
     [self addSubview:_overlayView];
 
-    float height = (_overlayView.frame.size.width - 2 * _frameXOffset) * _imageSize.height / _imageSize.width;
+    [self setupFrameXOffset];
 
-    _frameYOffset = (_overlayView.frame.size.height - height) / 2.0;
-
-    sightFrame = CGRectMake(_frameXOffset, _frameYOffset, _overlayView.frame.size.width - 2 * _frameXOffset, height);
+    sightFrame = CGRectMake(_frameXOffset, _frameYOffset, _overlayView.frame.size.width - 2 * _frameXOffset, _overlayView.frame.size.height - 2 * _frameYOffset);
 
     [_overlayView setSightFrame:sightFrame];
 
@@ -116,6 +113,28 @@
     [_imageContainer setFrame:CGRectMake(0.0, 0.0, _imageView.frame.size.width + sightFrame.origin.x * 2, _imageView.frame.size.height + sightFrame.origin.y * 2)];
 
     [self setupContent];
+}
+
+- (void)setupFrameXOffset
+{
+    float sightViewW = _overlayView.frame.size.width - 2 * _frameXOffset;
+    float sightViewH = _overlayView.frame.size.height - 2 * _frameYOffset;
+    float imageSizeW = _imageSize.width;
+    float imageSizeH = _imageSize.height;
+
+    float scaledW;
+    float scaledH;
+
+    if (sightViewW / imageSizeW < sightViewH / imageSizeH) {
+        scaledW = sightViewW;
+        scaledH = sightViewW * imageSizeH / imageSizeW;
+    } else {
+        scaledW = sightViewH * imageSizeW / imageSizeH;
+        scaledH = sightViewH;
+    }
+
+    _frameXOffset = (_overlayView.frame.size.width - scaledW) / 2;
+    _frameYOffset = (_overlayView.frame.size.height - scaledH) / 2;
 }
 
 - (void)setupContent
