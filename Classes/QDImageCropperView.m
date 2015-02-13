@@ -11,6 +11,7 @@
 #import "UIImage+QDResize.h"
 
 @interface QDImageCropperView () <UIScrollViewDelegate> {
+    CGRect bleedFrame;
     CGRect sightFrame;
 }
 
@@ -20,6 +21,7 @@
 @property (strong, nonatomic) UIScrollView *scrollView;
 @property (strong, nonatomic) UIView *imageContainer;
 @property (strong, nonatomic) QDImageCropperOverlay *overlayView;
+@property (strong, nonatomic) QDImageCropperOverlay *bleedView;
 
 @end
 
@@ -48,6 +50,7 @@
     _frameXOffset = 20.0;
     _frameYOffset = 20.0;
     _overlayColor = [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:0.8];
+    _bleedColor = [UIColor colorWithRed:0.0/255.0 green:0.0/255.0 blue:0.0/255.0 alpha:0.4];
 }
 
 -(void)setImage:(UIImage *)image
@@ -90,6 +93,14 @@
     sightFrame = CGRectMake(_frameXOffset, _frameYOffset, _overlayView.frame.size.width - 2 * _frameXOffset, _overlayView.frame.size.height - 2 * _frameYOffset);
 
     [_overlayView setSightFrame:sightFrame];
+
+    _bleedView = [[QDImageCropperOverlay alloc] initWithFrame:sightFrame];
+    [_bleedView setColor:_bleedColor];
+    [self addSubview:_bleedView];
+
+    bleedFrame = CGRectMake(_leftBleedRatio * sightFrame.size.width, _topBleedRatio * sightFrame.size.height, (1 - _leftBleedRatio - _rightBleedRatio) * sightFrame.size.width, (1 - _topBleedRatio - _bottomBleedRatio) * sightFrame.size.height);
+
+    [_bleedView setSightFrame:bleedFrame];
 
     double coef;
     if (_image.size.width / _image.size.height > sightFrame.size.width / sightFrame.size.height) {
@@ -162,8 +173,15 @@
     UIImage *croppedImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
 
+    CGRect bleed = [self visibleRect];
+
+    UIGraphicsBeginImageContext(bleed.size);
+    [_image drawInRect:CGRectMake(-bleed.origin.x, -bleed.origin.y, _image.size.width, _image.size.height)];
+    UIImage *bledImage = UIGraphicsGetImageFromCurrentImageContext();
+    UIGraphicsEndImageContext();
+
     if (self.delegate != nil) {
-        [self.delegate imageCropperView:self didCropImage:_image croppedRect:result croppedImage:croppedImage];
+        [self.delegate imageCropperView:self didCropImage:_image croppedRect:result croppedImage:croppedImage bledImage:bledImage];
     }
 }
 
@@ -178,6 +196,12 @@
     croppingRect.size.height = roundf(_imageSize.height / coef);
 
     return croppingRect;
+}
+
+- (CGRect)visibleRect
+{
+    CGRect croppingRect = [self croppingRect];
+    return CGRectMake(croppingRect.origin.x + _leftBleedRatio * croppingRect.size.width, croppingRect.origin.y + _topBleedRatio * croppingRect.size.height, (1 - _leftBleedRatio - _rightBleedRatio) * croppingRect.size.width, (1 - _topBleedRatio - _bottomBleedRatio) * croppingRect.size.height);
 }
 
 #pragma mark - ScrollView

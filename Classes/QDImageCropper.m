@@ -10,7 +10,7 @@
 #import "QDImageCropperView.h"
 
 @interface QDImageCropper () <QDImageCropperViewDelegate> {
-    void(^_completion)(UIImage *image, CGRect rect, UIImage *croppedImage);
+    void(^_completion)(UIImage *image, CGRect rect, UIImage *croppedImage, UIImage *bledImage);
 }
 
 @property (strong, nonatomic) QDImageCropperView *imageCropperView;
@@ -24,9 +24,13 @@
 
 @dynamic frameXOffset;
 @dynamic frameYOffset;
+@dynamic topBleedRatio;
+@dynamic leftBleedRatio;
+@dynamic bottomBleedRatio;
+@dynamic rightBleedRatio;
 @dynamic overlayColor;
 
-- (instancetype)initWithImage:(UIImage *)image resultImageSize:(CGSize)imageSize completion:(void (^)(UIImage *, CGRect, UIImage *))completion{
+- (instancetype)initWithImage:(UIImage *)image resultImageSize:(CGSize)imageSize completion:(void (^)(UIImage *, CGRect, UIImage *, UIImage *))completion{
     NSParameterAssert(completion && image);
     NSAssert(!CGSizeEqualToSize(imageSize, CGSizeZero), @"Set image size!");
 
@@ -68,6 +72,46 @@
 -(void)setFrameYOffset:(CGFloat)frameYOffset
 {
     _imageCropperView.frameYOffset = frameYOffset;
+}
+
+-(CGFloat)topBleedRatio
+{
+    return _imageCropperView.topBleedRatio;
+}
+
+-(void)setTopBleedRatio:(CGFloat)topBleedRatio
+{
+    _imageCropperView.topBleedRatio = topBleedRatio;
+}
+
+-(CGFloat)leftBleedRatio
+{
+    return _imageCropperView.leftBleedRatio;
+}
+
+-(void)setLeftBleedRatio:(CGFloat)leftBleedRatio
+{
+    _imageCropperView.leftBleedRatio = leftBleedRatio;
+}
+
+-(CGFloat)bottomBleedRatio
+{
+    return _imageCropperView.bottomBleedRatio;
+}
+
+-(void)setBottomBleedRatio:(CGFloat)bottomBleedRatio
+{
+    _imageCropperView.bottomBleedRatio = bottomBleedRatio;
+}
+
+-(CGFloat)rightBleedRatio
+{
+    return _imageCropperView.rightBleedRatio;
+}
+
+-(void)setRightBleedRatio:(CGFloat)rightBleedRatio
+{
+    _imageCropperView.rightBleedRatio = rightBleedRatio;
 }
 
 -(UIColor *)overlayColor
@@ -141,9 +185,9 @@
     // NSLog(@"QDImageCropperView: did scale image to [(%f, %f), (%f, %f)]", scaledRect.origin.x, scaledRect.origin.y, scaledRect.size.width, scaledRect.size.height);
 }
 
--(void)imageCropperView:(QDImageCropperView *)imageCropperView didCropImage:(UIImage *)image croppedRect:(CGRect)croppedRect croppedImage:(UIImage *)croppedImage
+-(void)imageCropperView:(QDImageCropperView *)imageCropperView didCropImage:(UIImage *)image croppedRect:(CGRect)croppedRect croppedImage:(UIImage *)croppedImage bledImage:(UIImage *)bledImage
 {
-    _completion(image, croppedRect, croppedImage);
+    _completion(image, croppedRect, croppedImage, bledImage);
 
     [self back];
 }

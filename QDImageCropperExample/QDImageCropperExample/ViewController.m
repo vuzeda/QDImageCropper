@@ -52,12 +52,16 @@
         
         QDImageCropper *cropper = [[QDImageCropper alloc] initWithImage:img
                                                         resultImageSize:CGSizeMake(180.0, 100.0)
-                                                             completion:^(UIImage *image, CGRect rect, UIImage *croppedImage) {
+                                                             completion:^(UIImage *image, CGRect rect, UIImage *croppedImage, UIImage *bledImage) {
                                                                  self.originalImageView.image = image;
-                                                                 self.croppedImageView.image = croppedImage;
+                                                                 self.croppedImageView.image = bledImage;
                                                              }];
         cropper.frameXOffset = 20;
         cropper.frameYOffset = 20;
+        cropper.topBleedRatio = 0.1;
+        cropper.leftBleedRatio = 0.2;
+        cropper.bottomBleedRatio = 0.3;
+        cropper.rightBleedRatio = 0.4;
         [self presentViewController:cropper animated:YES completion:nil];
     }];
 }
