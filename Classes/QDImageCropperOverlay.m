@@ -52,16 +52,20 @@
 }
 
 - (void)refresh{
-    UIImage *image = [UIImage imageWithColor:_color width:self.frame.size.width height:self.frame.size.height];
-    
-    UIGraphicsBeginImageContext(image.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
-    [image drawInRect:imageRect];
-    CGContextClearRect(context, _sightView.frame);
-    UIImage *bck = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage *bck;
+    @autoreleasepool {
+        UIImage *image = [UIImage imageWithColor:_color width:self.frame.size.width height:self.frame.size.height];
+
+        UIGraphicsBeginImageContext(image.size);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+        CGRect imageRect = CGRectMake(0, 0, image.size.width, image.size.height);
+        [image drawInRect:imageRect];
+        CGContextClearRect(context, _sightView.frame);
+        bck = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
+
     [self setBackgroundColor:[UIColor colorWithPatternImage:bck]];
-    UIGraphicsEndImageContext();
 }
 
 @end

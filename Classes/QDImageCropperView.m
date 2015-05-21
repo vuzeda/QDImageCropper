@@ -168,17 +168,23 @@
 {
     CGRect result = [self croppingRect];
 
-    UIGraphicsBeginImageContext(result.size);
-    [_image drawInRect:CGRectMake(-result.origin.x, -result.origin.y, _image.size.width, _image.size.height)];
-    UIImage *croppedImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    UIImage *croppedImage;
+    @autoreleasepool {
+        UIGraphicsBeginImageContext(result.size);
+        [_image drawInRect:CGRectMake(-result.origin.x, -result.origin.y, _image.size.width, _image.size.height)];
+        croppedImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
 
     CGRect bleed = [self visibleRect];
 
-    UIGraphicsBeginImageContext(bleed.size);
-    [_image drawInRect:CGRectMake(-bleed.origin.x, -bleed.origin.y, _image.size.width, _image.size.height)];
-    UIImage *bledImage = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    UIImage *bledImage;
+    @autoreleasepool {
+        UIGraphicsBeginImageContext(bleed.size);
+        [_image drawInRect:CGRectMake(-bleed.origin.x, -bleed.origin.y, _image.size.width, _image.size.height)];
+        bledImage = UIGraphicsGetImageFromCurrentImageContext();
+        UIGraphicsEndImageContext();
+    }
 
     if (self.delegate != nil) {
         [self.delegate imageCropperView:self didCropImage:_image croppedRect:result croppedImage:croppedImage bledImage:bledImage];

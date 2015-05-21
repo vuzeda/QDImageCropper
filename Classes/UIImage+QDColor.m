@@ -11,15 +11,20 @@
 @implementation UIImage (QDColor)
 
 + (UIImage *)imageWithColor:(UIColor *)color width:(double)width height:(double)height{
-    CGRect rect = CGRectMake(0, 0, width, height);
-    UIGraphicsBeginImageContext(rect.size);
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    
-    CGContextSetFillColorWithColor(context, [color CGColor]);
-    CGContextFillRect(context, rect);
-    
-    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
-    UIGraphicsEndImageContext();
+    UIImage *image;
+
+    @autoreleasepool {
+        CGRect rect = CGRectMake(0, 0, width, height);
+        UIGraphicsBeginImageContext(rect.size);
+        CGContextRef context = UIGraphicsGetCurrentContext();
+
+        CGContextSetFillColorWithColor(context, [color CGColor]);
+        CGContextFillRect(context, rect);
+
+        image = UIGraphicsGetImageFromCurrentImageContext();
+
+        UIGraphicsEndImageContext();
+    }
     
     return image;
 }
