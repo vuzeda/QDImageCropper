@@ -28,7 +28,7 @@
 @property (nonatomic, strong) UIColor *overlayColor;
 @property (nonatomic, strong) UIColor *bleedColor;
 
-@property (nonatomic, strong) id<QDImageCropperViewDelegate> delegate;
+@property (nonatomic, weak) id<QDImageCropperViewDelegate> delegate;
 
 - (void)crop;
 
